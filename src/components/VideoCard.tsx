@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { CheckCircle, Heart, Link, PlayCircleIcon } from 'lucide-react';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
@@ -277,13 +276,13 @@ export default function VideoCard({
         {/* 骨架屏 */}
         {!isLoading && <ImagePlaceholder aspectRatio='aspect-[2/3]' />}
         {/* 图片 */}
-        <Image
+        <img
           src={processImageUrl(actualPoster)}
           alt={actualTitle}
-          fill
-          className='object-cover'
+          className='absolute inset-0 w-full h-full object-cover'
           referrerPolicy='no-referrer'
-          onLoadingComplete={() => setIsLoading(true)}
+          loading='lazy'
+          onLoad={() => setIsLoading(true)}
         />
 
         {/* 悬浮遮罩 */}
