@@ -34,10 +34,16 @@ export function getImageProxyUrl(): string | null {
 export function processImageUrl(originalUrl: string): string {
   if (!originalUrl) return originalUrl;
 
+  // External image proxy (e.g. Cloudflare Worker)
   const proxyUrl = getImageProxyUrl();
-  if (!proxyUrl) return originalUrl;
+  if (proxyUrl) return `${proxyUrl}${encodeURIComponent(originalUrl)}`;
 
-  return `${proxyUrl}${encodeURIComponent(originalUrl)}`;
+  // Use internal server-side proxy to bypass Douban hotlinking protection
+  if (typeof window !== 'undefined') {
+    return `/api/proxy-image?url=${encodeURIComponent(originalUrl)}`;
+  }
+
+  return originalUrl;
 }
 
 /**
