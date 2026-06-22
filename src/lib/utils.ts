@@ -38,9 +38,9 @@ export function processImageUrl(originalUrl: string): string {
   const proxyUrl = getImageProxyUrl();
   if (proxyUrl) return `${proxyUrl}${encodeURIComponent(originalUrl)}`;
 
-  // Use internal server-side proxy to bypass Douban hotlinking protection
+  // Use built-in server-side proxy to bypass hotlinking
   if (typeof window !== 'undefined') {
-    return `/api/proxy-image?url=${encodeURIComponent(originalUrl)}`;
+    return `/api/image-proxy?url=${encodeURIComponent(originalUrl)}`;
   }
 
   return originalUrl;
