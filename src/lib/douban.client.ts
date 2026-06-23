@@ -36,8 +36,10 @@ async function fetchWithTimeout(
   const timeoutId = setTimeout(() => controller.abort(), 10000); // 10秒超时
 
   // 检查是否使用代理
+  // Use external proxy or internal proxy
   const proxyUrl = getDoubanProxyUrl();
-  const finalUrl = proxyUrl ? `${proxyUrl}${encodeURIComponent(url)}` : url;
+  const internalProxy = '/api/proxy-fetch?url=';
+  const finalUrl = proxyUrl ? `${proxyUrl}${encodeURIComponent(url)}` : `${internalProxy}${encodeURIComponent(url)}`;
 
   const fetchOptions: RequestInit = {
     ...options,
@@ -65,6 +67,11 @@ async function fetchWithTimeout(
  * 检查是否应该使用客户端获取豆瓣数据
  */
 export function shouldUseDoubanClient(): boolean {
+  // Always use client-side proxy when in browser for reliability
+  if (typeof window !== 'undefined') {
+    const internalProxy = '/api/proxy-fetch?url=';
+    return true;
+  }
   return getDoubanProxyUrl() !== null;
 }
 
